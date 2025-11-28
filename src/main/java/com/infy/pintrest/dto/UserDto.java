@@ -21,6 +21,7 @@ public class UserDto {
 	private String fullname;
 	private String mobile;
 	private String bio;
+	private String profilePath;
 
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType = AccountType.USER;
@@ -106,6 +107,14 @@ public class UserDto {
 
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+
+	public String getProfilePath() {
+		return profilePath;
+	}
+
+	public void setProfilePath(String profilePath) {
+		this.profilePath = profilePath;
 	}
 
 	public AccountType getAccountType() {

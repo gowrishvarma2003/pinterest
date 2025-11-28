@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.infy.pintrest.dto.UserSummaryDTO;
 import com.infy.pintrest.entity.Follow;
@@ -14,6 +16,8 @@ import com.infy.pintrest.exception.InfyPintrestException;
 import com.infy.pintrest.repository.FollowRepository;
 import com.infy.pintrest.repository.UserRepository;
 
+@Service
+@Transactional
 public class FollowUserImpl implements FollowUser {
 
     @Autowired

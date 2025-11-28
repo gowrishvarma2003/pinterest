@@ -111,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
         dto.setFullname(user.getFullname());
         dto.setMobile(user.getMobile());
         dto.setBio(user.getBio());
+        dto.setProfilePath(user.getProfilePath());
         dto.setAccountType(user.getAccountType());
 
         BusinessProfile bp = user.getBusinessProfile();

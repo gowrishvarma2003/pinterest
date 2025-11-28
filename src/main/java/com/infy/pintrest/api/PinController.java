@@ -3,12 +3,12 @@ package com.infy.pintrest.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -24,6 +24,7 @@ import com.infy.pintrest.exception.InfyPintrestException;
 import com.infy.pintrest.service.PinService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("pins")
 public class PinController {
 
