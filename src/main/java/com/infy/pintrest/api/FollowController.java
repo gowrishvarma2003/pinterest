@@ -50,4 +50,14 @@ public class FollowController {
     public ResponseEntity<Boolean> isFollowing(@PathVariable Integer followerId, @PathVariable Integer targetId) throws InfyPintrestException {
         return ResponseEntity.ok(followUser.isFollowing(followerId, targetId));
     }
+
+    @GetMapping("/{userId}/followers/count")
+    public ResponseEntity<Integer> followersCount(@PathVariable Integer userId) {
+        return ResponseEntity.ok(followUser.getFollowersCount(userId));
+    }
+
+    @GetMapping("/{userId}/following/count")
+    public ResponseEntity<Integer> followingCount(@PathVariable Integer userId) {
+        return ResponseEntity.ok(followUser.getFollowingCount(userId));
+    }
 }

@@ -74,7 +74,13 @@ public class FollowUserImpl implements FollowUser {
         List<Follow> followers = followRepository.findByFollowingId(userId);
         List<UserSummaryDTO> result = new ArrayList<>();
         for (Follow f : followers) {
-            UserSummaryDTO dto = modelMapper.map(f.getFollower(), UserSummaryDTO.class);
+            User user = f.getFollower();
+            UserSummaryDTO dto = new UserSummaryDTO();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setFullName(user.getFullname());
+            dto.setBio(user.getBio());
+            dto.setProfilePicUrl(user.getProfilePath());
             result.add(dto);
         }
         return result;
@@ -85,7 +91,13 @@ public class FollowUserImpl implements FollowUser {
         List<Follow> following = followRepository.findByFollowerId(userId);
         List<UserSummaryDTO> result = new ArrayList<>();
         for (Follow f : following) {
-            UserSummaryDTO dto = modelMapper.map(f.getFollowing(), UserSummaryDTO.class);
+            User user = f.getFollowing();
+            UserSummaryDTO dto = new UserSummaryDTO();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setFullName(user.getFullname());
+            dto.setBio(user.getBio());
+            dto.setProfilePicUrl(user.getProfilePath());
             result.add(dto);
         }
         return result;
@@ -95,5 +107,17 @@ public class FollowUserImpl implements FollowUser {
     public boolean isFollowing(Integer followerId, Integer targetid) {
         Optional<Follow> followOpt = followRepository.findByFollowerIdAndFollowingId(followerId, targetid);
         return followOpt.isPresent();
+    }
+
+    @Override
+    public int getFollowersCount(Integer userId) {
+        List<Follow> followers = followRepository.findByFollowingId(userId);
+        return followers.size();
+    }
+
+    @Override
+    public int getFollowingCount(Integer userId) {
+        List<Follow> following = followRepository.findByFollowerId(userId);
+        return following.size();
     }
 }

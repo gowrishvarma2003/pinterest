@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import com.infy.pinterest.enums.PinStatus;
 import com.infy.pintrest.dto.PinDTO;
 import com.infy.pintrest.dto.PinViewDTO;
 import com.infy.pintrest.exception.InfyPintrestException;
@@ -32,9 +33,18 @@ public class PinController {
     private PinService pinService;
 
     @PostMapping(value = "createpin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<PinDTO> createPin(@RequestPart("pin") PinDTO pinDto, @RequestPart("file") MultipartFile file) throws InfyPintrestException {
+    public ResponseEntity<PinDTO> createPin(@RequestPart("pin") PinDTO pinDto,
+                                            @RequestPart(value = "file", required = false) MultipartFile file) throws InfyPintrestException {
         PinDTO saved = pinService.createPin(pinDto, file);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{pinId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PinDTO> updatePin(@PathVariable Integer pinId,
+                                            @RequestPart("pin") PinDTO pinDto,
+                                            @RequestPart(value = "file", required = false) MultipartFile file) throws InfyPintrestException {
+        PinDTO updated = pinService.updatePin(pinId, pinDto, file);
+        return ResponseEntity.ok(updated);
     }
 
     // @PostMapping(value="createpin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -45,8 +55,15 @@ public class PinController {
     // }
 
     @GetMapping("/users/{userId}/pins")
-    public ResponseEntity<List<PinViewDTO>> getPindsForUser(@PathVariable Integer userId) throws InfyPintrestException {
-        List<PinViewDTO> pins = pinService.getPinsForUser(userId);
+    public ResponseEntity<List<PinViewDTO>> getPindsForUser(@PathVariable Integer userId,
+            @RequestParam(value = "status", required = false) PinStatus status) throws InfyPintrestException {
+        List<PinViewDTO> pins = pinService.getPinsForUser(userId, status);
+        return ResponseEntity.ok(pins);
+    }
+
+    @GetMapping("/users/{userId}/pins/public")
+    public ResponseEntity<List<PinViewDTO>> getPublicPinsForUser(@PathVariable Integer userId) throws InfyPintrestException {
+        List<PinViewDTO> pins = pinService.getPublicPinsForUser(userId);
         return ResponseEntity.ok(pins);
     }
 
@@ -56,7 +73,7 @@ public class PinController {
         return ResponseEntity.ok(pins);
     }
 
-    @GetMapping("/pins/{pinId}")
+    @GetMapping("/{pinId}")
     public ResponseEntity<PinViewDTO> getPinDetails(@PathVariable Integer pinId) throws InfyPintrestException {
         PinViewDTO pin = pinService.getPinDetails(pinId);
         return ResponseEntity.ok(pin);
@@ -68,9 +85,15 @@ public class PinController {
         return ResponseEntity.ok(movedPin);
     }
 
-    @DeleteMapping("/deletepin/{pinId}")
+    @DeleteMapping({"/{pinId}", "/deletepin/{pinId}"})
     public ResponseEntity<String> deletePin(@PathVariable Integer pinId) throws InfyPintrestException {
         pinService.deletePin(pinId);
         return ResponseEntity.ok("Pin deleted successfully");
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<List<PinViewDTO>> getHomeFeedPins() throws InfyPintrestException {
+        List<PinViewDTO> pins = pinService.getHomeFeedPins();
+        return ResponseEntity.ok(pins);
     }
 }

@@ -55,6 +55,10 @@ public class LikePinServiceImpl implements PinLikeService {
         return likeRepository.countByPinId(pinId);
     }
 
+    public boolean isLiked(Integer userId, Integer pinId) {
+        return likeRepository.existsByUserIdAndPinId(userId, pinId);
+    }
+
     public List<Pin> getLikedPins(Integer userId) {
         return likeRepository.findByUserId(userId).stream()
                 .map(PinLike::getPin)

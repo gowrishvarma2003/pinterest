@@ -31,6 +31,9 @@ List<Board> findByOwnerId(Integer ownerId);
 
 List<Board>findByOwnerIdAndShowcaseTrue(Integer ownerId);
 
+// Get public boards for a user
+List<Board> findByOwnerIdAndIsPrivateFalse(Integer ownerId);
+
 }
 
 

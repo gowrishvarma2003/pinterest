@@ -11,11 +11,8 @@ import java.util.List;
 import com.infy.pintrest.entity.Pin;
 
 public interface PinLikeService {
-
     public String likePin(Integer userId, Integer pinId);
-
     public int getLikes(Integer pinId);
-
+    public boolean isLiked(Integer userId, Integer pinId);
     List<Pin> getLikedPins(Integer userId);
-
 }

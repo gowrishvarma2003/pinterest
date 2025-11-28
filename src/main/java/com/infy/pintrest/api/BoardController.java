@@ -39,6 +39,12 @@ public class BoardController {
         return ResponseEntity.ok(boards);
     }
 
+    @GetMapping("/users/{userId}/boards/public")
+    public ResponseEntity<List<BoardDTO>> getPublicBoardsForUsers(@PathVariable Integer userId) throws InfyPintrestException {
+        List<BoardDTO> boards = boardService.getPublicBoardsForUser(userId);
+        return ResponseEntity.ok(boards);
+    }
+
     @GetMapping("/boards/{boardId}")
     public ResponseEntity<BoardDTO> getBoardById(@PathVariable Integer boardId) throws InfyPintrestException {
         BoardDTO board = boardService.getBoardById(boardId);

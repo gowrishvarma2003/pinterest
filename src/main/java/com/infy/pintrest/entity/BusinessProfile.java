@@ -14,6 +14,8 @@ import java.util.List;
 
 import jakarta.persistence.Entity;
 
+import jakarta.persistence.FetchType;
+
 import jakarta.persistence.GeneratedValue;
 
 import jakarta.persistence.GenerationType;
@@ -38,7 +40,7 @@ public class BusinessProfile {
 
 private Integer id;
 
-@OneToOne
+@OneToOne(fetch = FetchType.EAGER)
 
 @JoinColumn(name="user_id",unique=true)
 
@@ -55,6 +57,14 @@ private String websiteUrl;
 
 
 private String description;
+
+
+
+private String category;
+
+
+
+private boolean verified = false;
 
 
 
@@ -139,6 +149,30 @@ return description;
 public void setDescription(String description) {
 
 this.description = description;
+
+}
+
+public String getCategory() {
+
+return category;
+
+}
+
+public void setCategory(String category) {
+
+this.category = category;
+
+}
+
+public boolean isVerified() {
+
+return verified;
+
+}
+
+public void setVerified(boolean verified) {
+
+this.verified = verified;
 
 }
 

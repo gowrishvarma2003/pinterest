@@ -12,6 +12,7 @@ import com.infy.pintrest.entity.User;
 import com.infy.pintrest.exception.InfyPintrestException;
 import com.infy.pintrest.repository.BoardRepository;
 import com.infy.pintrest.repository.BusinessProfileRepository;
+import com.infy.pintrest.repository.FollowRepository;
 import com.infy.pintrest.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private FollowRepository followRepository;
 
     @Override
     public BusinessProfileViewDTO getBusinessProfileByUserId(Integer businessUserId) throws InfyPintrestException {
@@ -77,11 +81,29 @@ public class BusinessServiceImpl implements BusinessService {
         result.setBusinessName(bp.getBusinessName());
         result.setWebsiteUrl(bp.getWebsiteUrl());
         result.setDescription(bp.getDescription());
+        result.setCategory(bp.getCategory());
+        result.setVerified(bp.isVerified());
         result.setOwnerId(owner.getId());
+        result.setOwnerUsername(owner.getName());
         result.setOwnerFullName(owner.getFullname() != null ? owner.getFullname() : owner.getName());
         result.setOwnerProfilePicUrl(owner.getProfilePath());
+        
+        // Get cover image from first showcase board or first board
+        String coverImage = null;
+        if (!showcaseDtos.isEmpty() && showcaseDtos.get(0).getCoverImageUrl() != null) {
+            coverImage = showcaseDtos.get(0).getCoverImageUrl();
+        } else if (allBoards != null && !allBoards.isEmpty() && allBoards.get(0).getCoverImageUrl() != null) {
+            coverImage = allBoards.get(0).getCoverImageUrl();
+        }
+        result.setCoverImageUrl(coverImage);
+        
         result.setTotalBoards(totalBoards);
         result.setTotalPins(totalPins);
+        
+        // Get follower count
+        List<com.infy.pintrest.entity.Follow> followers = followRepository.findByFollowingId(owner.getId());
+        result.setFollowerCount(followers == null ? 0 : followers.size());
+        
         result.setShowcaseBoards(showcaseDtos);
         return result;
     }
@@ -93,11 +115,14 @@ public class BusinessServiceImpl implements BusinessService {
         for (BusinessProfile bp : all) {
             User owner = bp.getUser();
             if (owner == null) {
-                // Try to fetch owner (defensive)
-                Optional<User> ownerOpt = userRepository.findById(bp.getUser().getId());
-                if (ownerOpt.isEmpty()) continue;
-                owner = ownerOpt.get();
+                continue;
             }
+            
+            // Fetch the full user to ensure all fields are loaded
+            Optional<User> ownerOpt = userRepository.findById(owner.getId());
+            if (ownerOpt.isEmpty()) continue;
+            owner = ownerOpt.get();
+            
             Integer ownerId = owner.getId();
 
             // compute counts
@@ -128,11 +153,29 @@ public class BusinessServiceImpl implements BusinessService {
             dto.setBusinessName(bp.getBusinessName());
             dto.setWebsiteUrl(bp.getWebsiteUrl());
             dto.setDescription(bp.getDescription());
+            dto.setCategory(bp.getCategory());
+            dto.setVerified(bp.isVerified());
             dto.setOwnerId(ownerId);
+            dto.setOwnerUsername(owner.getName());
             dto.setOwnerFullName(owner.getFullname() != null ? owner.getFullname() : owner.getName());
             dto.setOwnerProfilePicUrl(owner.getProfilePath());
+            
+            // Get cover image from first showcase board or first board
+            String coverImage = null;
+            if (!showcaseDtos.isEmpty() && showcaseDtos.get(0).getCoverImageUrl() != null) {
+                coverImage = showcaseDtos.get(0).getCoverImageUrl();
+            } else if (boards != null && !boards.isEmpty() && boards.get(0).getCoverImageUrl() != null) {
+                coverImage = boards.get(0).getCoverImageUrl();
+            }
+            dto.setCoverImageUrl(coverImage);
+            
             dto.setTotalBoards(totalBoards);
             dto.setTotalPins(totalPins);
+            
+            // Get follower count
+            List<com.infy.pintrest.entity.Follow> followers = followRepository.findByFollowingId(ownerId);
+            dto.setFollowerCount(followers == null ? 0 : followers.size());
+            
             dto.setShowcaseBoards(showcaseDtos);
             out.add(dto);
         }

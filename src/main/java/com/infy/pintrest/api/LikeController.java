@@ -33,6 +33,11 @@ public class LikeController {
         return ResponseEntity.ok(likeService.getLikes(pinId));
     }
 
+    @GetMapping("/isLiked")
+    public ResponseEntity<Boolean> isLiked(@RequestParam Integer userId, @RequestParam Integer pinId) {
+        return ResponseEntity.ok(likeService.isLiked(userId, pinId));
+    }
+
     @GetMapping("/liked")
     public ResponseEntity<List<Pin>> getLikedPins(@RequestParam Integer userId) {
         return ResponseEntity.ok(likeService.getLikedPins(userId));

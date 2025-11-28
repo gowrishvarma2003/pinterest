@@ -30,19 +30,29 @@ private String websiteUrl;
 
 private String description;
 
+private String category;
+
+private boolean verified;
+
 
 
 private Integer ownerId;
 
+private String ownerUsername;
+
 private String ownerFullName;
 
 private String ownerProfilePicUrl;
+
+private String coverImageUrl;
 
 
 
 private Integer totalBoards;
 
 private Integer totalPins;
+
+private Integer followerCount;
 
 
 

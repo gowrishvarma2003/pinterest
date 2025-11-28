@@ -3,6 +3,7 @@ package com.infy.pintrest.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.infy.pinterest.enums.AccountType;
 
 import jakarta.persistence.CascadeType;
@@ -44,9 +45,11 @@ public class User {
     private LocalDateTime lastFailedAttempt;
 
     @OneToMany(mappedBy = "owner")
+    @JsonIgnoreProperties({"owner", "pins"})
     private List<Board> boards;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties({"user", "board"})
     private List<Pin> pins;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

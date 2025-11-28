@@ -87,10 +87,19 @@ public class AuthServiceImpl implements AuthService {
         User data = userData.get();
 
         String savedPath = hp.saveFile(file, uploadDir);
-        data.setProfilePath(savedPath);
+        
+        // Convert absolute path to relative URL path for serving via web
+        // savedPath is like: C:/Users/.../uploads/profile/uuid.jpg
+        // We need: /uploads/profile/uuid.jpg
+        String relativePath = savedPath.replace(root, "").replace("\\", "/");
+        if (!relativePath.startsWith("/")) {
+            relativePath = "/" + relativePath;
+        }
+        
+        data.setProfilePath(relativePath);
         userRepository.save(data);
 
-        return savedPath;
+        return relativePath;
     }
 
     @Override

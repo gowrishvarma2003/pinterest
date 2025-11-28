@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 
@@ -77,16 +77,23 @@ private boolean showcase=false;
 @ManyToOne
 
 @JoinColumn(name="owner_id", nullable = false)
-
+@JsonIgnoreProperties({"boards", "pins", "password", "failedLoginAttemps", "lastFailedAttempt", "businessProfile"})
 private User owner;
 
 
 
 @OneToMany(mappedBy="board")
-
+@JsonIgnoreProperties({"board", "user"})
 private List<Pin> pins = new ArrayList<>();
 
-
+@jakarta.persistence.ManyToMany
+@jakarta.persistence.JoinTable(
+    name = "board_collaborators",
+    joinColumns = @jakarta.persistence.JoinColumn(name = "board_id"),
+    inverseJoinColumns = @jakarta.persistence.JoinColumn(name = "user_id")
+)
+@JsonIgnoreProperties({"boards", "pins", "password", "failedLoginAttemps", "lastFailedAttempt", "businessProfile"})
+private List<User> collaborators = new ArrayList<>();
 
 }
 

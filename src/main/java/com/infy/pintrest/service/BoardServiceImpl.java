@@ -75,7 +75,33 @@ public class BoardServiceImpl implements BoardService {
         for (Board board : boards) {
             BoardDTO dto = modelMapper.map(board, BoardDTO.class);
             dto.setPinCount(board.getPins() != null ? board.getPins().size() : 0);
+            if (board.getOwner() != null) {
+                dto.setOwnerId(board.getOwner().getId());
+                dto.setOwnerName(board.getOwner().getFullname());
+                dto.setOwnerAvatar(board.getOwner().getProfilePath());
+            }
+            boardDtos.add(dto);
+        }
+        return boardDtos;
+    }
 
+    @Override
+    public List<BoardDTO> getPublicBoardsForUser(Integer userId) throws InfyPintrestException {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new InfyPintrestException("Auth.UserNotExists");
+        }
+        List<Board> boards = boardRepository.findByOwnerIdAndIsPrivateFalse(userId);
+        List<BoardDTO> boardDtos = new ArrayList<>();
+
+        for (Board board : boards) {
+            BoardDTO dto = modelMapper.map(board, BoardDTO.class);
+            dto.setPinCount(board.getPins() != null ? board.getPins().size() : 0);
+            if (board.getOwner() != null) {
+                dto.setOwnerId(board.getOwner().getId());
+                dto.setOwnerName(board.getOwner().getFullname());
+                dto.setOwnerAvatar(board.getOwner().getProfilePath());
+            }
             boardDtos.add(dto);
         }
         return boardDtos;
@@ -90,6 +116,12 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardOpt.get();
         BoardDTO dto = modelMapper.map(board, BoardDTO.class);
         dto.setPinCount(board.getPins() != null ? board.getPins().size() : 0);
+        // Set owner info
+        if (board.getOwner() != null) {
+            dto.setOwnerId(board.getOwner().getId());
+            dto.setOwnerName(board.getOwner().getFullname());
+            dto.setOwnerAvatar(board.getOwner().getProfilePath());
+        }
         return dto;
     }
 

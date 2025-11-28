@@ -25,16 +25,28 @@ private Integer senderId;
 
 private Integer receiverId;
 
-//private String type;
-
 private Integer boardId;
 
 private InvitationStatus status;
 
 private String senderName;
 
+private String senderFullName;
+
+private String senderEmail;
+
+private String senderAvatar;
+
+private String receiverName;
+
+private String receiverEmail;
+
+private String receiverAvatar;
+
 private String boardTitle;
 
+private String boardCoverUrl;
 
+private String sentAt;
 
 }

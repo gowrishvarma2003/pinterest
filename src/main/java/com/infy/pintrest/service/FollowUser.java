@@ -30,4 +30,8 @@ List<UserSummaryDTO> getFollowing(Integer userId) throws InfyPintrestException;
 
 boolean isFollowing(Integer followerId, Integer targetid) throws InfyPintrestException;
 
+int getFollowersCount(Integer userId);
+
+int getFollowingCount(Integer userId);
+
 }

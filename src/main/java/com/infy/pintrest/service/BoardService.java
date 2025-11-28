@@ -31,6 +31,8 @@ BoardDTO createBoard(BoardDTO boardDto, MultipartFile file) throws InfyPintrestE
 
 List<BoardDTO> getBoardForUser(Integer userId) throws InfyPintrestException;
 
+List<BoardDTO> getPublicBoardsForUser(Integer userId) throws InfyPintrestException;
+
 BoardDTO getBoardById(Integer boardId) throws InfyPintrestException;
 
 BoardDTO updateBoard(Integer boardId, BoardUpdateDTO boardUpdateDTO) throws InfyPintrestException;

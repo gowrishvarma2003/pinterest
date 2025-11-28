@@ -27,6 +27,11 @@ public class PinActionController {
         return ResponseEntity.ok(service.savePin(userId, pinId));
     }
 
+    @GetMapping("/isSaved")
+    public ResponseEntity<Boolean> isSaved(@RequestParam Integer userId, @RequestParam Integer pinId) {
+        return ResponseEntity.ok(service.isSaved(userId, pinId));
+    }
+
     @GetMapping("/saved")
     public ResponseEntity<List<Pin>> getSavedPins(@RequestParam Integer userId) {
         return ResponseEntity.ok(service.getSavedPins(userId));
