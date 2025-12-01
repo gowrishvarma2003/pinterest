@@ -63,11 +63,11 @@ public class FollowControllerTest {
         @Test
         @DisplayName("Should follow user successfully")
         void followUser_Success() throws Exception {
-            when(followUser.followUser(1, 2)).thenReturn("Successfully followed user");
+            when(followUser.followUser(1, 2)).thenReturn("Followed successfully");
 
             mockMvc.perform(post("/follow/1/follow/2"))
                     .andExpect(status().isOk())
-                    .andExpect(content().string("Successfully followed user"));
+                    .andExpect(content().string("Followed successfully"));
         }
 
         @Test
@@ -101,13 +101,13 @@ public class FollowControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail when already following")
-        void followUser_AlreadyFollowing_Failure() throws Exception {
-            when(followUser.followUser(1, 2))
-                    .thenThrow(new InfyPintrestException("Already following this user"));
+        @DisplayName("Should return already following message")
+        void followUser_AlreadyFollowing_Success() throws Exception {
+            when(followUser.followUser(1, 2)).thenReturn("Already following");
 
             mockMvc.perform(post("/follow/1/follow/2"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Already following"));
         }
     }
 
@@ -118,11 +118,11 @@ public class FollowControllerTest {
         @Test
         @DisplayName("Should unfollow user successfully")
         void unfollowUser_Success() throws Exception {
-            when(followUser.unfollowUser(1, 2)).thenReturn("Successfully unfollowed user");
+            when(followUser.unfollowUser(1, 2)).thenReturn("User unfollowed");
 
             mockMvc.perform(delete("/follow/1/unfollow/2"))
                     .andExpect(status().isOk())
-                    .andExpect(content().string("Successfully unfollowed user"));
+                    .andExpect(content().string("User unfollowed"));
         }
 
         @Test
@@ -136,23 +136,23 @@ public class FollowControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail when not following")
-        void unfollowUser_NotFollowing_Failure() throws Exception {
-            when(followUser.unfollowUser(1, 2))
-                    .thenThrow(new InfyPintrestException("Not following this user"));
+        @DisplayName("Should return not following message")
+        void unfollowUser_NotFollowing_Success() throws Exception {
+            when(followUser.unfollowUser(1, 2)).thenReturn("Not following");
 
             mockMvc.perform(delete("/follow/1/unfollow/2"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Not following"));
         }
 
         @Test
-        @DisplayName("Should fail when trying to unfollow self")
-        void unfollowUser_UnfollowSelf_Failure() throws Exception {
-            when(followUser.unfollowUser(1, 1))
-                    .thenThrow(new InfyPintrestException("Cannot unfollow yourself"));
+        @DisplayName("Should return not following when trying to unfollow self")
+        void unfollowUser_UnfollowSelf_Success() throws Exception {
+            when(followUser.unfollowUser(1, 1)).thenReturn("Not following");
 
             mockMvc.perform(delete("/follow/1/unfollow/1"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Not following"));
         }
     }
 
@@ -183,13 +183,13 @@ public class FollowControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail when user not found")
-        void getFollowers_UserNotFound_Failure() throws Exception {
-            when(followUser.getFollowers(999))
-                    .thenThrow(new InfyPintrestException("User not found"));
+        @DisplayName("Should return empty list when user not found")
+        void getFollowers_UserNotFound_Success() throws Exception {
+            when(followUser.getFollowers(999)).thenReturn(Collections.emptyList());
 
             mockMvc.perform(get("/follow/999/followers"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(0));
         }
     }
 
@@ -219,13 +219,13 @@ public class FollowControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail when user not found")
-        void getFollowing_UserNotFound_Failure() throws Exception {
-            when(followUser.getFollowing(999))
-                    .thenThrow(new InfyPintrestException("User not found"));
+        @DisplayName("Should return empty list when user not found")
+        void getFollowing_UserNotFound_Success() throws Exception {
+            when(followUser.getFollowing(999)).thenReturn(Collections.emptyList());
 
             mockMvc.perform(get("/follow/999/following"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(0));
         }
     }
 
@@ -254,23 +254,23 @@ public class FollowControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail when follower not found")
-        void isFollowing_FollowerNotFound_Failure() throws Exception {
-            when(followUser.isFollowing(999, 2))
-                    .thenThrow(new InfyPintrestException("User not found"));
+        @DisplayName("Should return false when follower not found")
+        void isFollowing_FollowerNotFound_Success() throws Exception {
+            when(followUser.isFollowing(999, 2)).thenReturn(false);
 
             mockMvc.perform(get("/follow/999/isfollowing/2"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("false"));
         }
 
         @Test
-        @DisplayName("Should fail when target not found")
-        void isFollowing_TargetNotFound_Failure() throws Exception {
-            when(followUser.isFollowing(1, 999))
-                    .thenThrow(new InfyPintrestException("Target user not found"));
+        @DisplayName("Should return false when target not found")
+        void isFollowing_TargetNotFound_Success() throws Exception {
+            when(followUser.isFollowing(1, 999)).thenReturn(false);
 
             mockMvc.perform(get("/follow/1/isfollowing/999"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("false"));
         }
     }
 

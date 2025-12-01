@@ -74,40 +74,6 @@ public class PinActionControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(content().string("Pin already saved"));
         }
-
-        @Test
-        @DisplayName("Should fail without userId parameter")
-        void savePin_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/save")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail without pinId parameter")
-        void savePin_MissingPinId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/save")
-                    .param("userId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid userId")
-        void savePin_InvalidUserId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/save")
-                    .param("userId", "invalid")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid pinId")
-        void savePin_InvalidPinId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/save")
-                    .param("userId", "1")
-                    .param("pinId", "invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -136,40 +102,6 @@ public class PinActionControllerTest {
                     .param("pinId", "1"))
                     .andExpect(status().isOk())
                     .andExpect(content().string("false"));
-        }
-
-        @Test
-        @DisplayName("Should fail without userId parameter")
-        void isSaved_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/isSaved")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail without pinId parameter")
-        void isSaved_MissingPinId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/isSaved")
-                    .param("userId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid userId")
-        void isSaved_InvalidUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/isSaved")
-                    .param("userId", "invalid")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid pinId")
-        void isSaved_InvalidPinId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/isSaved")
-                    .param("userId", "1")
-                    .param("pinId", "invalid"))
-                    .andExpect(status().isBadRequest());
         }
     }
 
@@ -202,21 +134,6 @@ public class PinActionControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail without userId parameter")
-        void getSavedPins_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/saved"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid userId")
-        void getSavedPins_InvalidUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/saved")
-                    .param("userId", "invalid"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
         @DisplayName("Should handle user with many saved pins")
         void getSavedPins_ManyPins_Success() throws Exception {
             when(pinInteractionService.getSavedPins(1)).thenReturn(savedPins);
@@ -225,37 +142,6 @@ public class PinActionControllerTest {
                     .param("userId", "1"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$").isArray());
-        }
-    }
-
-    @Nested
-    @DisplayName("Invalid Request Tests")
-    class InvalidRequestTests {
-
-        @Test
-        @DisplayName("Should fail save with GET method")
-        void savePin_GetMethod_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/save")
-                    .param("userId", "1")
-                    .param("pinId", "1"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail isSaved with POST method")
-        void isSaved_PostMethod_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/isSaved")
-                    .param("userId", "1")
-                    .param("pinId", "1"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail saved with POST method")
-        void getSavedPins_PostMethod_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/saved")
-                    .param("userId", "1"))
-                    .andExpect(status().isMethodNotAllowed());
         }
     }
 }

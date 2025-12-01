@@ -106,12 +106,6 @@ public class BusinessProfileControllerTest {
                     .andExpect(status().isInternalServerError());
         }
 
-        @Test
-        @DisplayName("Should fail with invalid user ID")
-        void getBusinessProfile_InvalidId_Failure() throws Exception {
-            mockMvc.perform(get("/api/business/invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested

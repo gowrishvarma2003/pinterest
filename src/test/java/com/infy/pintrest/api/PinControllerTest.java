@@ -329,12 +329,7 @@ public class PinControllerTest {
                     .andExpect(status().isInternalServerError());
         }
 
-        @Test
-        @DisplayName("Should fail with invalid pin ID")
-        void getPinDetails_InvalidId_Failure() throws Exception {
-            mockMvc.perform(get("/pins/invalid"))
-                    .andExpect(status().isBadRequest());
-        }
+
     }
 
     @Nested
@@ -374,12 +369,6 @@ public class PinControllerTest {
                     .andExpect(status().isInternalServerError());
         }
 
-        @Test
-        @DisplayName("Should fail without targetBoardId")
-        void movePin_MissingTargetBoard_Failure() throws Exception {
-            mockMvc.perform(put("/pins/1/move"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested

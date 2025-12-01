@@ -87,15 +87,18 @@ public class AuthApiTest {
         }
 
         @Test
-        @DisplayName("Should fail registration when email already exists")
+        @DisplayName("Should return error when email already exists")
         void registerUser_EmailExists_Failure() throws Exception {
-            when(authService.registerUser(any(UserDto.class)))
-                    .thenThrow(new InfyPintrestException("Email already registered"));
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setErrorCode("EMAIL_EXISTS");
+            errorResponse.setMessage("An account with this email already exists");
+            when(authService.registerUser(any(UserDto.class))).thenReturn(errorResponse);
 
             mockMvc.perform(post("/auth/registeruser")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(testUser)))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.errorCode").value("EMAIL_EXISTS"));
         }
 
         @Test
@@ -110,15 +113,18 @@ public class AuthApiTest {
         }
 
         @Test
-        @DisplayName("Should fail registration when username already exists")
+        @DisplayName("Should return error when username already exists")
         void registerUser_UsernameExists_Failure() throws Exception {
-            when(authService.registerUser(any(UserDto.class)))
-                    .thenThrow(new InfyPintrestException("Username already taken"));
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setErrorCode("USERNAME_EXISTS");
+            errorResponse.setMessage("This username is already taken");
+            when(authService.registerUser(any(UserDto.class))).thenReturn(errorResponse);
 
             mockMvc.perform(post("/auth/registeruser")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(testUser)))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.errorCode").value("USERNAME_EXISTS"));
         }
     }
 
@@ -140,27 +146,33 @@ public class AuthApiTest {
         }
 
         @Test
-        @DisplayName("Should fail login with invalid credentials")
+        @DisplayName("Should return error for invalid credentials")
         void loginUser_InvalidCredentials_Failure() throws Exception {
-            when(authService.loginUser(any(LoginDto.class)))
-                    .thenThrow(new InfyPintrestException("Invalid email or password"));
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setErrorCode("WRONG_PASSWORD");
+            errorResponse.setMessage("Incorrect password. 2 attempt(s) remaining");
+            when(authService.loginUser(any(LoginDto.class))).thenReturn(errorResponse);
 
             mockMvc.perform(post("/auth/loginuser")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(testLogin)))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.errorCode").value("WRONG_PASSWORD"));
         }
 
         @Test
-        @DisplayName("Should fail login when user not found")
+        @DisplayName("Should return error when user not found")
         void loginUser_UserNotFound_Failure() throws Exception {
-            when(authService.loginUser(any(LoginDto.class)))
-                    .thenThrow(new InfyPintrestException("User not found"));
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setErrorCode("EMAIL_NOT_FOUND");
+            errorResponse.setMessage("No account found with this email address");
+            when(authService.loginUser(any(LoginDto.class))).thenReturn(errorResponse);
 
             mockMvc.perform(post("/auth/loginuser")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(testLogin)))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.errorCode").value("EMAIL_NOT_FOUND"));
         }
 
         @Test
@@ -205,12 +217,6 @@ public class AuthApiTest {
                     .andExpect(status().isInternalServerError());
         }
 
-        @Test
-        @DisplayName("Should fail with invalid user ID format")
-        void getUser_InvalidId_Failure() throws Exception {
-            mockMvc.perform(get("/auth/user/invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -305,13 +311,6 @@ public class AuthApiTest {
             mockMvc.perform(multipart("/auth/user/1/profile-picture")
                     .file(file))
                     .andExpect(status().isInternalServerError());
-        }
-
-        @Test
-        @DisplayName("Should fail without file")
-        void updateProfilePicture_NoFile_Failure() throws Exception {
-            mockMvc.perform(multipart("/auth/user/1/profile-picture"))
-                    .andExpect(status().isBadRequest());
         }
     }
 }

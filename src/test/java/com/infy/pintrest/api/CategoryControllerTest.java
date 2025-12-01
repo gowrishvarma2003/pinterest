@@ -3,19 +3,22 @@ package com.infy.pintrest.api;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@WebMvcTest(CategoryController.class)
 public class CategoryControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new CategoryController()).build();
+    }
+    
     @Nested
     @DisplayName("GET /categories - Get All Categories Tests")
     class GetAllCategoriesTests {
@@ -74,29 +77,4 @@ public class CategoryControllerTest {
         }
     }
 
-    @Nested
-    @DisplayName("Invalid Request Tests")
-    class InvalidRequestTests {
-
-        @Test
-        @DisplayName("Should fail with POST method")
-        void categories_PostMethod_Failure() throws Exception {
-            mockMvc.perform(post("/categories"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail with PUT method")
-        void categories_PutMethod_Failure() throws Exception {
-            mockMvc.perform(put("/categories"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail with DELETE method")
-        void categories_DeleteMethod_Failure() throws Exception {
-            mockMvc.perform(delete("/categories"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-    }
 }

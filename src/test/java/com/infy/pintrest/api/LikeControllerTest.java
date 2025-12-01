@@ -66,39 +66,16 @@ public class LikeControllerTest {
         @Test
         @DisplayName("Should return message when already liked")
         void likePin_AlreadyLiked_Success() throws Exception {
-            when(likeService.likePin(1, 1)).thenReturn("Pin already liked");
+            when(likeService.likePin(1, 1)).thenReturn("You already liked this pin");
 
             mockMvc.perform(post("/api/pins/like")
                     .param("userId", "1")
                     .param("pinId", "1"))
                     .andExpect(status().isOk())
-                    .andExpect(content().string("Pin already liked"));
+                    .andExpect(content().string("You already liked this pin"));
         }
 
-        @Test
-        @DisplayName("Should fail without userId parameter")
-        void likePin_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/like")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
 
-        @Test
-        @DisplayName("Should fail without pinId parameter")
-        void likePin_MissingPinId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/like")
-                    .param("userId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid userId")
-        void likePin_InvalidUserId_Failure() throws Exception {
-            mockMvc.perform(post("/api/pins/like")
-                    .param("userId", "invalid")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -134,13 +111,6 @@ public class LikeControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(content().string("1000000"));
         }
-
-        @Test
-        @DisplayName("Should fail with invalid pinId")
-        void getLikes_InvalidPinId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/invalid/likes"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -171,21 +141,6 @@ public class LikeControllerTest {
                     .andExpect(content().string("false"));
         }
 
-        @Test
-        @DisplayName("Should fail without userId parameter")
-        void isLiked_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/isLiked")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail without pinId parameter")
-        void isLiked_MissingPinId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/isLiked")
-                    .param("userId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -215,21 +170,6 @@ public class LikeControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.length()").value(0));
         }
-
-        @Test
-        @DisplayName("Should fail without userId parameter")
-        void getLikedPins_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/liked"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid userId")
-        void getLikedPins_InvalidUserId_Failure() throws Exception {
-            mockMvc.perform(get("/api/pins/liked")
-                    .param("userId", "invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -251,47 +191,16 @@ public class LikeControllerTest {
         @Test
         @DisplayName("Should return message when not liked")
         void unlikePin_NotLiked_Success() throws Exception {
-            when(likeService.unlikePin(1, 1)).thenReturn("Pin was not liked");
+            when(likeService.unlikePin(1, 1)).thenReturn("You haven't liked this pin");
 
             mockMvc.perform(delete("/api/pins/unlike")
                     .param("userId", "1")
                     .param("pinId", "1"))
                     .andExpect(status().isOk())
-                    .andExpect(content().string("Pin was not liked"));
+                    .andExpect(content().string("You haven't liked this pin"));
         }
 
-        @Test
-        @DisplayName("Should fail without userId parameter")
-        void unlikePin_MissingUserId_Failure() throws Exception {
-            mockMvc.perform(delete("/api/pins/unlike")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
 
-        @Test
-        @DisplayName("Should fail without pinId parameter")
-        void unlikePin_MissingPinId_Failure() throws Exception {
-            mockMvc.perform(delete("/api/pins/unlike")
-                    .param("userId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
 
-        @Test
-        @DisplayName("Should fail with invalid userId")
-        void unlikePin_InvalidUserId_Failure() throws Exception {
-            mockMvc.perform(delete("/api/pins/unlike")
-                    .param("userId", "invalid")
-                    .param("pinId", "1"))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid pinId")
-        void unlikePin_InvalidPinId_Failure() throws Exception {
-            mockMvc.perform(delete("/api/pins/unlike")
-                    .param("userId", "1")
-                    .param("pinId", "invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 }

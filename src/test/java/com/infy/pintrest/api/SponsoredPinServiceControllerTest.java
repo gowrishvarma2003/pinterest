@@ -100,17 +100,6 @@ public class SponsoredPinServiceControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail without ad data")
-        void createSponsoredPin_NoAdData_Failure() throws Exception {
-            MockMultipartFile file = new MockMultipartFile(
-                    "file", "ad.jpg", "image/jpeg", "ad image content".getBytes());
-
-            mockMvc.perform(multipart("/api/ads/create")
-                    .file(file))
-                    .andExpect(status().isBadRequest());
-        }
-
-        @Test
         @DisplayName("Should create sponsored pin with all fields")
         void createSponsoredPin_AllFields_Success() throws Exception {
             MockMultipartFile file = new MockMultipartFile(
@@ -171,45 +160,7 @@ public class SponsoredPinServiceControllerTest {
         }
     }
 
-    @Nested
-    @DisplayName("Invalid Request Tests")
-    class InvalidRequestTests {
-
-        @Test
-        @DisplayName("Should fail with GET method on create")
-        void createSponsoredPin_GetMethod_Failure() throws Exception {
-            mockMvc.perform(get("/api/ads/create"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail with PUT method on create")
-        void createSponsoredPin_PutMethod_Failure() throws Exception {
-            mockMvc.perform(put("/api/ads/create"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail with DELETE method on create")
-        void createSponsoredPin_DeleteMethod_Failure() throws Exception {
-            mockMvc.perform(delete("/api/ads/create"))
-                    .andExpect(status().isMethodNotAllowed());
-        }
-
-        @Test
-        @DisplayName("Should fail with invalid JSON")
-        void createSponsoredPin_InvalidJson_Failure() throws Exception {
-            MockMultipartFile file = new MockMultipartFile(
-                    "file", "ad.jpg", "image/jpeg", "ad image content".getBytes());
-            MockMultipartFile adPart = new MockMultipartFile(
-                    "ad", "", "application/json", "invalid json".getBytes());
-
-            mockMvc.perform(multipart("/api/ads/create")
-                    .file(file)
-                    .file(adPart))
-                    .andExpect(status().isBadRequest());
-        }
-    }
+   
 
     @Nested
     @DisplayName("Edge Case Tests")

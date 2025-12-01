@@ -1,9 +1,3 @@
-//package com.infy.pintrest.entity;
-//
-//public class Board {
-//
-//}
-
 package com.infy.pintrest.entity;
 
 

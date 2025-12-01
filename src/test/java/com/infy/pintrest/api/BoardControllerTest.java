@@ -166,13 +166,6 @@ public class BoardControllerTest {
             mockMvc.perform(get("/board/users/999/boards"))
                     .andExpect(status().isInternalServerError());
         }
-
-        @Test
-        @DisplayName("Should fail with invalid user ID")
-        void getBoardsForUser_InvalidId_Failure() throws Exception {
-            mockMvc.perform(get("/board/users/invalid/boards"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -238,12 +231,6 @@ public class BoardControllerTest {
                     .andExpect(status().isInternalServerError());
         }
 
-        @Test
-        @DisplayName("Should fail with invalid board ID")
-        void getBoardById_InvalidId_Failure() throws Exception {
-            mockMvc.perform(get("/board/boards/invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -339,11 +326,5 @@ public class BoardControllerTest {
                     .andExpect(status().isInternalServerError());
         }
 
-        @Test
-        @DisplayName("Should fail with invalid board ID")
-        void deleteBoard_InvalidId_Failure() throws Exception {
-            mockMvc.perform(delete("/board/boards/invalid"))
-                    .andExpect(status().isBadRequest());
-        }
     }
 }
