@@ -35,4 +35,9 @@ public class PinViewDTO {
     private String userName;
     private String userFullname;
     private String userProfilePath;
+    
+    // Business profile details for sponsored pins
+    private String businessName;
+    private String websiteUrl;
+    private String category;
 }

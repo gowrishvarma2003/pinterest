@@ -27,6 +27,6 @@ List<PinLike> findByUserId(Integer userId);
 
 int countByPinId(Integer pinId);
 
-
+void deleteByUserIdAndPinId(Integer userId, Integer pinId);
 
 }

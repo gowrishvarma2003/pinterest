@@ -1,11 +1,14 @@
 package com.infy.pintrest.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +39,17 @@ public class BusinessProfileController {
     public ResponseEntity<List<BusinessProfileViewDTO>> getAllBusinessProfiles() {
         List<BusinessProfileViewDTO> list = businessService.getAllBusinessProfiles();
         return ResponseEntity.ok(list);
+    }
+
+    // Convert user to business account
+    @PostMapping("/convert/{userId}")
+    public ResponseEntity<BusinessProfileViewDTO> convertToBusiness(
+            @PathVariable Integer userId,
+            @RequestBody Map<String, String> request) throws InfyPintrestException {
+        String businessName = request.get("businessName");
+        String websiteUrl = request.get("websiteUrl");
+        String category = request.get("category");
+        BusinessProfileViewDTO dto = businessService.convertToBusiness(userId, businessName, websiteUrl, category);
+        return ResponseEntity.ok(dto);
     }
 }

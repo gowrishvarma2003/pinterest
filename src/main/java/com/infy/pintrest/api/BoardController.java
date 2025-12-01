@@ -7,15 +7,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.infy.pintrest.dto.BoardDTO;
+import com.infy.pintrest.dto.BoardUpdateDTO;
 import com.infy.pintrest.exception.InfyPintrestException;
 import com.infy.pintrest.service.BoardService;
 
@@ -49,5 +53,17 @@ public class BoardController {
     public ResponseEntity<BoardDTO> getBoardById(@PathVariable Integer boardId) throws InfyPintrestException {
         BoardDTO board = boardService.getBoardById(boardId);
         return ResponseEntity.ok(board);
+    }
+
+    @PutMapping("/boards/{boardId}")
+    public ResponseEntity<BoardDTO> updateBoard(@PathVariable Integer boardId, @RequestBody BoardUpdateDTO boardUpdateDTO) throws InfyPintrestException {
+        BoardDTO updated = boardService.updateBoard(boardId, boardUpdateDTO);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/boards/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable Integer boardId) throws InfyPintrestException {
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.ok("Board deleted successfully");
     }
 }

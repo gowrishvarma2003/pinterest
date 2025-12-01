@@ -3,7 +3,9 @@ package com.infy.pintrest.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.infy.pinterest.enums.AccountType;
 import com.infy.pintrest.dto.BusinessProfileViewDTO;
 import com.infy.pintrest.dto.ShowcaseBoardDTO;
 import com.infy.pintrest.entity.Board;
@@ -85,7 +87,7 @@ public class BusinessServiceImpl implements BusinessService {
         result.setVerified(bp.isVerified());
         result.setOwnerId(owner.getId());
         result.setOwnerUsername(owner.getName());
-        result.setOwnerFullName(owner.getFullname() != null ? owner.getFullname() : owner.getName());
+        result.setOwnerFullName(owner.getUsername() != null ? owner.getUsername() : owner.getName());
         result.setOwnerProfilePicUrl(owner.getProfilePath());
         
         // Get cover image from first showcase board or first board
@@ -157,7 +159,7 @@ public class BusinessServiceImpl implements BusinessService {
             dto.setVerified(bp.isVerified());
             dto.setOwnerId(ownerId);
             dto.setOwnerUsername(owner.getName());
-            dto.setOwnerFullName(owner.getFullname() != null ? owner.getFullname() : owner.getName());
+            dto.setOwnerFullName(owner.getUsername() != null ? owner.getUsername() : owner.getName());
             dto.setOwnerProfilePicUrl(owner.getProfilePath());
             
             // Get cover image from first showcase board or first board
@@ -180,5 +182,45 @@ public class BusinessServiceImpl implements BusinessService {
             out.add(dto);
         }
         return out;
+    }
+
+    @Override
+    @Transactional
+    public BusinessProfileViewDTO convertToBusiness(Integer userId, String businessName, String websiteUrl, String category) throws InfyPintrestException {
+        // Validate user exists
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new InfyPintrestException("Service.USER_NOT_FOUND");
+        }
+        User user = userOpt.get();
+
+        // Check if already a business account
+        if (user.getAccountType() == AccountType.BUSINESS) {
+            throw new InfyPintrestException("Service.ALREADY_BUSINESS_ACCOUNT");
+        }
+
+        // Check if business name is provided
+        if (businessName == null || businessName.trim().isEmpty()) {
+            throw new InfyPintrestException("Service.BUSINESS_NAME_REQUIRED");
+        }
+
+        // Create business profile
+        BusinessProfile bp = new BusinessProfile();
+        bp.setUser(user);
+        bp.setBusinessName(businessName.trim());
+        bp.setWebsiteUrl(websiteUrl);
+        bp.setCategory(category);
+        bp.setVerified(false);
+
+        // Save business profile
+        businessProfileRepository.save(bp);
+
+        // Update user account type
+        user.setAccountType(AccountType.BUSINESS);
+        user.setBusinessProfile(bp);
+        userRepository.save(user);
+
+        // Return the business profile DTO
+        return getBusinessProfileByUserId(userId);
     }
 }

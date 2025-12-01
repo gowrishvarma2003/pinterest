@@ -10,4 +10,3 @@ public class PintrestApplication {
 		SpringApplication.run(PintrestApplication.class, args);
 	}
 }
-

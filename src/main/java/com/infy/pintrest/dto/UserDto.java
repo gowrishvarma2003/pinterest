@@ -18,7 +18,7 @@ public class UserDto {
 	private String name;
 	private String email;
 	private String password;
-	private String fullname;
+	private String username;
 	private String mobile;
 	private String bio;
 	private String profilePath;
@@ -85,12 +85,12 @@ public class UserDto {
 		this.password = password;
 	}
 
-	public String getFullname() {
-		return fullname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getMobile() {

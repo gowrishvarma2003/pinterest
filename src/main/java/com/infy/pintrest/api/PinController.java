@@ -96,4 +96,16 @@ public class PinController {
         List<PinViewDTO> pins = pinService.getHomeFeedPins();
         return ResponseEntity.ok(pins);
     }
+
+    @GetMapping("/sponsored")
+    public ResponseEntity<List<PinViewDTO>> getSponsoredPins() throws InfyPintrestException {
+        List<PinViewDTO> pins = pinService.getSponsoredPins();
+        return ResponseEntity.ok(pins);
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<PinViewDTO>> getPinsByCategory(@PathVariable String category) throws InfyPintrestException {
+        List<PinViewDTO> pins = pinService.getPinsByCategory(category);
+        return ResponseEntity.ok(pins);
+    }
 }

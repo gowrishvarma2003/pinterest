@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.infy.pinterest.enums.PinStatus;
@@ -20,6 +21,7 @@ import com.infy.pintrest.entity.User;
 import com.infy.pintrest.exception.InfyPintrestException;
 import com.infy.pintrest.repository.BoardRepository;
 import com.infy.pintrest.repository.PinRepository;
+import com.infy.pintrest.repository.SavedPinRepository;
 import com.infy.pintrest.repository.UserRepository;
 import com.infy.pintrest.utility.HelperFunctions;
 
@@ -34,6 +36,9 @@ public class PinServiceImpl implements PinService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private SavedPinRepository savedPinRepository;
 
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/pins";
 
@@ -148,9 +153,13 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
+    @Transactional
     public void deletePin(Integer pinId) throws InfyPintrestException {
         Pin pin = pinRepository.findById(pinId)
                 .orElseThrow(() -> new InfyPintrestException("Service.PIN_NOT_FOUND"));
+
+        // Delete all saved_pin references first to avoid foreign key constraint violation
+        savedPinRepository.deleteByPinId(pinId);
 
         deleteLocalFileIfExists(pin.getImageUrl());
         deleteLocalFileIfExists(pin.getVideoUrl());
@@ -175,6 +184,37 @@ public class PinServiceImpl implements PinService {
         return result;
     }
 
+    @Override
+    public List<PinViewDTO> getSponsoredPins() throws InfyPintrestException {
+        // Get all public pins from business accounts
+        List<Pin> pins = pinRepository.findBusinessAccountPins();
+        
+        List<PinViewDTO> result = new ArrayList<>();
+        for (Pin pin : pins) {
+            PinViewDTO dto = convertToDTO(pin);
+            // Add business info
+            User user = pin.getUser();
+            if (user.getBusinessProfile() != null) {
+                dto.setBusinessName(user.getBusinessProfile().getBusinessName());
+                dto.setWebsiteUrl(user.getBusinessProfile().getWebsiteUrl());
+                dto.setCategory(user.getBusinessProfile().getCategory());
+            }
+            result.add(dto);
+        }
+        return result;
+    }
+
+    @Override
+    public List<PinViewDTO> getPinsByCategory(String category) throws InfyPintrestException {
+        List<Pin> pins = pinRepository.findByCategory(category);
+        
+        List<PinViewDTO> result = new ArrayList<>();
+        for (Pin pin : pins) {
+            result.add(convertToDTO(pin));
+        }
+        return result;
+    }
+
     private PinViewDTO convertToDTO(Pin pin) {
         PinViewDTO dto = modelMapper.map(pin, PinViewDTO.class);
 
@@ -186,7 +226,7 @@ public class PinServiceImpl implements PinService {
         User user = pin.getUser();
         dto.setUserId(user.getId());
         dto.setUserName(user.getName());
-        dto.setUserFullname(user.getFullname());
+        dto.setUserFullname(user.getUsername());
         dto.setUserProfilePath(user.getProfilePath());
         
         return dto;

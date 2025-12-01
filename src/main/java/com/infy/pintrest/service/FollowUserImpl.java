@@ -78,7 +78,7 @@ public class FollowUserImpl implements FollowUser {
             UserSummaryDTO dto = new UserSummaryDTO();
             dto.setId(user.getId());
             dto.setName(user.getName());
-            dto.setFullName(user.getFullname());
+            dto.setFullName(user.getUsername());
             dto.setBio(user.getBio());
             dto.setProfilePicUrl(user.getProfilePath());
             result.add(dto);
@@ -95,7 +95,7 @@ public class FollowUserImpl implements FollowUser {
             UserSummaryDTO dto = new UserSummaryDTO();
             dto.setId(user.getId());
             dto.setName(user.getName());
-            dto.setFullName(user.getFullname());
+            dto.setFullName(user.getUsername());
             dto.setBio(user.getBio());
             dto.setProfilePicUrl(user.getProfilePath());
             result.add(dto);

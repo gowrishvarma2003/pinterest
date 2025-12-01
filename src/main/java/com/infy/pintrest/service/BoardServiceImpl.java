@@ -77,7 +77,7 @@ public class BoardServiceImpl implements BoardService {
             dto.setPinCount(board.getPins() != null ? board.getPins().size() : 0);
             if (board.getOwner() != null) {
                 dto.setOwnerId(board.getOwner().getId());
-                dto.setOwnerName(board.getOwner().getFullname());
+                dto.setOwnerName(board.getOwner().getUsername());
                 dto.setOwnerAvatar(board.getOwner().getProfilePath());
             }
             boardDtos.add(dto);
@@ -99,7 +99,7 @@ public class BoardServiceImpl implements BoardService {
             dto.setPinCount(board.getPins() != null ? board.getPins().size() : 0);
             if (board.getOwner() != null) {
                 dto.setOwnerId(board.getOwner().getId());
-                dto.setOwnerName(board.getOwner().getFullname());
+                dto.setOwnerName(board.getOwner().getUsername());
                 dto.setOwnerAvatar(board.getOwner().getProfilePath());
             }
             boardDtos.add(dto);
@@ -119,7 +119,7 @@ public class BoardServiceImpl implements BoardService {
         // Set owner info
         if (board.getOwner() != null) {
             dto.setOwnerId(board.getOwner().getId());
-            dto.setOwnerName(board.getOwner().getFullname());
+            dto.setOwnerName(board.getOwner().getUsername());
             dto.setOwnerAvatar(board.getOwner().getProfilePath());
         }
         return dto;

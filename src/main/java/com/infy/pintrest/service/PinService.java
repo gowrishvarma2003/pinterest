@@ -22,4 +22,6 @@ public interface PinService {
     PinViewDTO movePin(Integer pinId, Integer targetBoardId) throws InfyPintrestException;
     void deletePin(Integer pinId) throws InfyPintrestException;
     List<PinViewDTO> getHomeFeedPins() throws InfyPintrestException;
+    List<PinViewDTO> getSponsoredPins() throws InfyPintrestException;
+    List<PinViewDTO> getPinsByCategory(String category) throws InfyPintrestException;
 }

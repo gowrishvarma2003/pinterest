@@ -29,10 +29,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
+
+    @Column(unique = true)
     private String email;
+    
     private String password;
-    private String fullname;
+
+    @Column(unique = true)
+    private String username;
+    
     private String mobile;
     private String bio;
     private String profilePath;
@@ -40,9 +47,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AccountType accountType = AccountType.USER;
 
-    private int failedLoginAttemps = 0;
+    private int failedLoginAttempts = 0;
 
-    private LocalDateTime lastFailedAttempt;
+    private LocalDateTime lockoutEndTime;
 
     @OneToMany(mappedBy = "owner")
     @JsonIgnoreProperties({"owner", "pins"})

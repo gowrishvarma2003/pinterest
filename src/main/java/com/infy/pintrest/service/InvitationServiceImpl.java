@@ -44,7 +44,7 @@ public class InvitationServiceImpl implements InvitationService {
         // Sender info
         User sender = inv.getSender();
         dto.setSenderName(sender.getName());
-        dto.setSenderFullName(sender.getFullname() != null ? sender.getFullname() : sender.getName());
+        dto.setSenderFullName(sender.getUsername() != null ? sender.getUsername() : sender.getName());
         dto.setSenderEmail(sender.getEmail());
         dto.setSenderAvatar(sender.getProfilePath());
         
@@ -251,7 +251,7 @@ public class InvitationServiceImpl implements InvitationService {
                 com.infy.pintrest.dto.UserSummaryDTO dto = new com.infy.pintrest.dto.UserSummaryDTO();
                 dto.setId(user.getId());
                 dto.setName(user.getName());
-                dto.setFullName(user.getFullname());
+                dto.setFullName(user.getUsername());
                 dto.setProfilePicUrl(user.getProfilePath());
                 dto.setEmail(user.getEmail());
                 collaborators.add(dto);
@@ -281,7 +281,7 @@ public class InvitationServiceImpl implements InvitationService {
                 dto.setDescription(board.getDescription());
                 dto.setCoverImageUrl(board.getCoverImageUrl());
                 dto.setOwnerId(owner.getId());
-                dto.setOwnerName(owner.getFullname() != null ? owner.getFullname() : owner.getName());
+                dto.setOwnerName(owner.getUsername() != null ? owner.getUsername() : owner.getName());
                 dto.setOwnerAvatar(owner.getProfilePath());
                 dto.setPinCount(board.getPins() != null ? board.getPins().size() : 0);
                 boards.add(dto);

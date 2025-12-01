@@ -34,7 +34,9 @@ List<SavedPin> findByUserIdAndPinId(Integer userId, Integer pinId);
 
 List<SavedPin> findByUserId(Integer userId);
 
+List<SavedPin> findByPinId(Integer pinId);
 
+void deleteByPinId(Integer pinId);
 
 
 

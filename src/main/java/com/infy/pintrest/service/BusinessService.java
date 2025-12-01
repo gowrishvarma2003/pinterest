@@ -28,6 +28,6 @@ BusinessProfileViewDTO getBusinessProfileByUserId(Integer businessUserId) throws
 
 List<BusinessProfileViewDTO> getAllBusinessProfiles();
 
-
+BusinessProfileViewDTO convertToBusiness(Integer userId, String businessName, String websiteUrl, String category) throws InfyPintrestException;
 
 }

@@ -64,4 +64,21 @@ public class LikePinServiceImpl implements PinLikeService {
                 .map(PinLike::getPin)
                 .collect(Collectors.toList());
     }
+
+    public String unlikePin(Integer userId, Integer pinId) {
+        if (!likeRepository.existsByUserIdAndPinId(userId, pinId)) {
+            return "You haven't liked this pin";
+        }
+
+        Pin pin = pinRepository.findById(pinId)
+                .orElseThrow(() -> new RuntimeException("Pin not found"));
+
+        likeRepository.deleteByUserIdAndPinId(userId, pinId);
+
+        // decrease pin like count
+        pin.setLikes(Math.max(0, pin.getLikes() - 1));
+        pinRepository.save(pin);
+
+        return "Pin unliked successfully";
+    }
 }

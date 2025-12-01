@@ -33,8 +33,14 @@ public class Pin {
 
     @Column(length = 2000)
     private String description;
+    
+    @Column(length = 2000)
     private String imageUrl;
+    
+    @Column(length = 2000)
     private String videoUrl;
+    
+    @Column(length = 2000)
     private String sourceUrl;
     private String keywords;
     private boolean isPrivate;
